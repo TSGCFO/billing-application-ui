@@ -1,22 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import CustomerModal from './components/CustomerModal';
 
 function App() {
+  const [isModalOpen, setModalOpen] = useState(false); // State to control the modal
+
+  const handleOpen = () => setModalOpen(true); // Function to open the modal
+  const handleClose = () => setModalOpen(false); // Function to close the modal
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Welcome to Our Billing Application</h1>
+        <button onClick={handleOpen}>Create Customer</button>  {/* Button to open the modal */}
+        <CustomerModal open={isModalOpen} handleClose={handleClose} />
       </header>
     </div>
   );
