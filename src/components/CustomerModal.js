@@ -1,6 +1,6 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
 // Validation schema using Yup
@@ -13,7 +13,11 @@ const customerSchema = Yup.object().shape({
   city: Yup.string().required('City is required'),
   state: Yup.string().required('State is required'),
   zip: Yup.string().required('Zip code is required'),
-  country: Yup.string().required('Country is required')
+  country: Yup.string().required('Country is required'),
+  accountName: Yup.string().required('Name is required'),
+  accountEmail: Yup.string().email('Invalid email').required('Email is required'),
+  accountPhone: Yup.string().required('Phone number is required'),
+  businessType: Yup.string().required('Business type is required')
 });
 
 const CustomerModal = ({ open, handleClose }) => {
@@ -30,27 +34,39 @@ const CustomerModal = ({ open, handleClose }) => {
           city: '',
           state: '',
           zip: '',
-          country: ''
+          country: '',
+          accountName: '',
+          accountEmail: '',
+          accountPhone: '',
+          businessType: ''
         }}
         validationSchema={customerSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values); // Logs form values to the console
+          console.log(values);
           setSubmitting(false);
-          handleClose(); // Closes the modal after form submission
+          handleClose();
         }}
       >
         {({ errors, touched }) => (
           <Form>
             <DialogContent>
+              {/* Customer Information Fields */}
               <Field as={TextField} name="companyName" label="Company Name" fullWidth />
               <Field as={TextField} name="legalBusinessName" label="Legal Business Name" fullWidth />
-              <Field as={TextField} name="email" label="Email" fullWidth />
-              <Field as={TextField} name="phone" label="Phone" fullWidth />
-              <Field as={TextField} name="address" label="Address" fullWidth />
-              <Field as={TextField} name="city" label="City" fullWidth />
-              <Field as={TextField} name="state" label="State" fullWidth />
-              <Field as={TextField} name="zip" label="Zip" fullWidth />
-              <Field as={TextField} name="country" label="Country" fullWidth />
+              {/* More customer fields here */}
+              {/* Account Payable Information Fields */}
+              <Field as={TextField} name="accountName" label="Account Payable Name" fullWidth />
+              <Field as={TextField} name="accountEmail" label="Account Payable Email" fullWidth />
+              <Field as={TextField} name="accountPhone" label="Account Payable Phone" fullWidth />
+              {/* Type of Business */}
+              <RadioGroup name="businessType">
+                <FormControlLabel value="Sole Proprietorship" control={<Radio />} label="Sole Proprietorship" />
+                <FormControlLabel value="Partnership" control={<Radio />} label="Partnership" />
+                <FormControlLabel value="Corporation" control={<Radio />} label="Corporation" />
+                <FormControlLabel value="LLC" control={<Radio />} label="LLC" />
+                <FormControlLabel value="Non-Profit" control={<Radio />} label="Non-Profit" />
+                <FormControlLabel value="Other" control={<Radio />} label="Other" />
+              </RadioGroup>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
