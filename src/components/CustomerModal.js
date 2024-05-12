@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
@@ -14,9 +13,13 @@ const customerSchema = Yup.object().shape({
   state: Yup.string().required('State is required'),
   zip: Yup.string().required('Zip code is required'),
   country: Yup.string().required('Country is required'),
-  accountName: Yup.string().required('Name is required'),
-  accountEmail: Yup.string().email('Invalid email').required('Email is required'),
-  accountPhone: Yup.string().required('Phone number is required'),
+  accountsPayable: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      email: Yup.string().email('Invalid email').required('Email is required'),
+      phone: Yup.string().required('Phone number is required'),
+    })
+  ),
   businessType: Yup.string().required('Business type is required')
 });
 
@@ -35,9 +38,7 @@ const CustomerModal = ({ open, handleClose }) => {
           state: '',
           zip: '',
           country: '',
-          accountName: '',
-          accountEmail: '',
-          accountPhone: '',
+          accountsPayable: [{ name: '', email: '', phone: '' }],
           businessType: ''
         }}
         validationSchema={customerSchema}
@@ -47,18 +48,31 @@ const CustomerModal = ({ open, handleClose }) => {
           handleClose();
         }}
       >
-        {({ errors, touched }) => (
+        {({ values, errors, touched }) => (
           <Form>
             <DialogContent>
-              {/* Customer Information Fields */}
               <Field as={TextField} name="companyName" label="Company Name" fullWidth />
               <Field as={TextField} name="legalBusinessName" label="Legal Business Name" fullWidth />
-              {/* More customer fields here */}
-              {/* Account Payable Information Fields */}
-              <Field as={TextField} name="accountName" label="Account Payable Name" fullWidth />
-              <Field as={TextField} name="accountEmail" label="Account Payable Email" fullWidth />
-              <Field as={TextField} name="accountPhone" label="Account Payable Phone" fullWidth />
-              {/* Type of Business */}
+              <Field as={TextField} name="email" label="Email" fullWidth />
+              <Field as={TextField} name="phone" label="Phone" fullWidth />
+              <Field as={TextField} name="address" label="Address" fullWidth />
+              <Field as={TextField} name="city" label="City" fullWidth />
+              <Field as={TextField} name="state" label="State" fullWidth />
+              <Field as={TextField} name="zip" label="Zip" fullWidth />
+              <Field as={TextField} name="country" label="Country" fullWidth />
+              <FieldArray name="accountsPayable">
+                {({ insert, remove, push }) => (
+                  values.accountsPayable.map((account, index) => (
+                    <div key={index}>
+                      <Field as={TextField} name={`accountsPayable.${index}.name`} label="Name" fullWidth />
+                      <Field as={TextField} name={`accountsPayable.${index}.email`} label="Email" fullWidth />
+                      <Field as={TextField} name={`accountsPayable.${index}.phone`} label="Phone" fullWidth />
+                      <Button type="button" onClick={() => remove(index)}>Remove</Button>
+                    </div>
+                  ))
+                )}
+                <Button type="button" onClick={() => push({ name: '', email: '', phone: '' })}>Add More</Button>
+              </FieldArray>
               <RadioGroup name="businessType">
                 <FormControlLabel value="Sole Proprietorship" control={<Radio />} label="Sole Proprietorship" />
                 <FormControlLabel value="Partnership" control={<Radio />} label="Partnership" />
