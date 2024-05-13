@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import { push } from 'formik';
 
 // Validation schema using Yup
 const customerSchema = Yup.object().shape({
@@ -49,7 +48,7 @@ const CustomerModal = ({ open, handleClose }) => {
           handleClose();
         }}
       >
-        {({ values, errors, touched }) => (
+        {formikProps => (
           <Form>
             <DialogContent>
               <Field as={TextField} name="companyName" label="Company Name" fullWidth />
@@ -62,17 +61,19 @@ const CustomerModal = ({ open, handleClose }) => {
               <Field as={TextField} name="zip" label="Zip" fullWidth />
               <Field as={TextField} name="country" label="Country" fullWidth />
               <FieldArray name="accountsPayable">
-                {({ insert, remove, push }) => (
-                  values.accountsPayable.map((account, index) => (
+                {({ push, remove }) => (
+                  formikProps.values.accountsPayable.map((account, index) => (
                     <div key={index}>
                       <Field as={TextField} name={`accountsPayable.${index}.name`} label="Name" fullWidth />
                       <Field as={TextField} name={`accountsPayable.${index}.email`} label="Email" fullWidth />
                       <Field as={TextField} name={`accountsPayable.${index}.phone`} label="Phone" fullWidth />
                       <Button type="button" onClick={() => remove(index)}>Remove</Button>
+                      {index === formikProps.values.accountsPayable.length - 1 && (
+                        <Button type="button" onClick={() => push({ name: '', email: '', phone: '' })}>Add More</Button>
+                      )}
                     </div>
                   ))
                 )}
-                <Button type="button" onClick={() => push({ name: '', email: '', phone: '' })}>Add More</Button>
               </FieldArray>
               <RadioGroup name="businessType">
                 <FormControlLabel value="Sole Proprietorship" control={<Radio />} label="Sole Proprietorship" />
