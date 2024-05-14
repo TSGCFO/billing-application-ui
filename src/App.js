@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import CustomerPage from './components/customer/CustomerPage';
 import PricingPage from './components/pricing/PricingPage';
-import InventoryPage from './components/inventory/InventoryPage'; // Corrected import for InventoryPage
-import BillingPage from './components/billing/BillingPage'; // Corrected import for BillingPage
+import InventoryPage from './components/inventory/InventoryPage';
+import BillingPage from './components/billing/BillingPage';
 
 function App() {
   return (

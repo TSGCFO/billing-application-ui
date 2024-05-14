@@ -2,7 +2,6 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, F
 import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
-// Validation schema using Yup
 const customerSchema = Yup.object().shape({
   companyName: Yup.string().required('Company name is required'),
   legalBusinessName: Yup.string().required('Legal business name is required'),
