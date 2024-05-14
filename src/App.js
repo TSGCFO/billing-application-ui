@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
-import CustomerModal from './components/CustomerModal';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import CustomerPage from './components/customer/CustomerPage';
+import PricingPage from './components/pricing/PricingPage';
+import InventoryPage from './components/inventory/InventoryPage'; // Corrected import for InventoryPage
+import BillingPage from './components/billing/BillingPage'; // Corrected import for BillingPage
 
 function App() {
-  const [isModalOpen, setModalOpen] = useState(false); // State to control the modal
-
-  const handleOpen = () => setModalOpen(true); // Function to open the modal
-  const handleClose = () => setModalOpen(false); // Function to close the modal
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Welcome to Our Billing Application</h1>
-        <button onClick={handleOpen}>Create Customer</button>  {/* Button to open the modal */}
-        <CustomerModal open={isModalOpen} handleClose={handleClose} />
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>Welcome to Our Billing Application</h1>
+          <nav>
+            <ul>
+              <li><Link to="/customer">Customer</Link></li>
+              <li><Link to="/pricing">Pricing</Link></li>
+              <li><Link to="/inventory">Inventory</Link></li>
+              <li><Link to="/billing">Billing</Link></li>
+            </ul>
+          </nav>
+        </header>
+        <Routes>
+          <Route path="/customer" element={<CustomerPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/billing" element={<BillingPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
