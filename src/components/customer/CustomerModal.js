@@ -2,6 +2,7 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, F
 import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
+// Define validation schema using Yup
 const customerSchema = Yup.object().shape({
   customerId: Yup.number().required('Customer ID is required').positive().integer(),
   companyName: Yup.string().required('Company name is required'),
@@ -44,9 +45,24 @@ const CustomerModal = ({ open, handleClose }) => {
         }}
         validationSchema={customerSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setSubmitting(false);
-          handleClose();
+          // Send data to backend
+          fetch('http://localhost:5000/customers', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Success:', data);
+            setSubmitting(false);
+            handleClose();
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            setSubmitting(false);
+          });
         }}
       >
         {formikProps => (
