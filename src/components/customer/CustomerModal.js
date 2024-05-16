@@ -3,6 +3,7 @@ import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
 const customerSchema = Yup.object().shape({
+  customerId: Yup.number().required('Customer ID is required').positive().integer(),
   companyName: Yup.string().required('Company name is required'),
   legalBusinessName: Yup.string().required('Legal business name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -28,6 +29,7 @@ const CustomerModal = ({ open, handleClose }) => {
       <DialogTitle>Create Customer</DialogTitle>
       <Formik
         initialValues={{
+          customerId: '',
           companyName: '',
           legalBusinessName: '',
           email: '',
@@ -50,6 +52,7 @@ const CustomerModal = ({ open, handleClose }) => {
         {formikProps => (
           <Form>
             <DialogContent>
+              <Field as={TextField} name="customerId" label="Customer ID" fullWidth />
               <Field as={TextField} name="companyName" label="Company Name" fullWidth />
               <Field as={TextField} name="legalBusinessName" label="Legal Business Name" fullWidth />
               <Field as={TextField} name="email" label="Email" fullWidth />
