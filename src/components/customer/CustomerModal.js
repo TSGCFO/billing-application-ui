@@ -1,10 +1,11 @@
+import React from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
-// Define validation schema using Yup
 const customerSchema = Yup.object().shape({
-  customerId: Yup.number().required('Customer ID is required').positive().integer(),
+  customerId: Yup.number().required('Customer ID is required'),
   companyName: Yup.string().required('Company name is required'),
   legalBusinessName: Yup.string().required('Legal business name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -30,7 +31,7 @@ const CustomerModal = ({ open, handleClose }) => {
       <DialogTitle>Create Customer</DialogTitle>
       <Formik
         initialValues={{
-          customerId: '',
+          customerId: '', // Add initial value for customerId
           companyName: '',
           legalBusinessName: '',
           email: '',
@@ -45,24 +46,16 @@ const CustomerModal = ({ open, handleClose }) => {
         }}
         validationSchema={customerSchema}
         onSubmit={(values, { setSubmitting }) => {
-          // Send data to backend
-          fetch('http://localhost:5000/customers', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
-            setSubmitting(false);
-            handleClose();
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            setSubmitting(false);
-          });
+          axios.post('http://localhost:5000/customers', values)
+            .then(response => {
+              console.log(response.data);
+              setSubmitting(false);
+              handleClose();
+            })
+            .catch(error => {
+              console.error('There was an error!', error);
+              setSubmitting(false);
+            });
         }}
       >
         {formikProps => (
